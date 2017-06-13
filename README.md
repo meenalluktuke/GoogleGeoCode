@@ -1,6 +1,13 @@
 # Google GeoCode App
 
-## Overview
+Version: 1.0
+
+# Infrastructure Requiment
+
+Any Operating system (tested on Windows 10 and Linux)
+Splunk 6.5
+
+# Overview
 
 Google GeoCode app is a way to translate your address fields into (latitude,longitude). If you do not have IP address in your data and still want to use the map with markers, this app will help you. 
 
