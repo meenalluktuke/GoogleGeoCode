@@ -20,6 +20,7 @@ Google GeoCode app is a way to translate your address fields into (latitude,long
  ```sh
 index=_internal | stats count by source |eval Address="San Jose, California, United States" | printgeocode Address
 ```
+![Alt text](https://github.com/meenalluktuke/GoogleGeoCode/blob/master/Geocode_Map.PNG "Geocode Map")
 
  As simple as looking for a location on Maps, don't you think?
 
