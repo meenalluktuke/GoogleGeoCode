@@ -1,13 +1,18 @@
 import splunk.Intersplunk
-import appconfig
 from geopy import geocoders
 
  
 def geocode(string):
   address=string
 # API_KEY From Google, to be added in appconfig.py file
-
-  g = geocoders.GoogleV3(api_key=appconfig.api_key)
+  fname = open('../local/appsetup.conf', 'r')
+  for line in fname.readlines():
+	if '=' not in line:
+		continue
+	l = line.strip().split('=')
+	api_key_val=l[1]
+	
+  g = geocoders.GoogleV3(api_key=api_key_val)
   place, (lat,lng) = g.geocode(address)
   loc = (lat,lng)
 # Returns latitude,longitude pair
