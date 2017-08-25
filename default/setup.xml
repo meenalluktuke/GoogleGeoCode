@@ -1,0 +1,8 @@
+<setup>
+<block title="Enter your Google API Key" endpoint="apiconf/GoogleAPIkey" entity="app_config">
+    <input field="api_key">
+        <label>Enter API Key</label>
+        <type>text</type>
+    </input>
+</block>
+</setup>
