@@ -1,0 +1,40 @@
+[app/install/install_source_checksum]
+version = 6.5.3
+modtime = 1503664355.575554300
+
+[appsetup/app_config]
+version = 6.5.3
+modtime = 1506922460.958725000
+
+[app/install/is_configured]
+version = 6.5.3
+modtime = 1506922465.697744700
+
+[indexes/test]
+owner = admin
+version = 6.5.3
+modtime = 1506582569.057997300
+
+[props/users_addresses]
+owner = admin
+version = 6.5.3
+modtime = 1506582596.387394600
+
+[props/user_latlon]
+owner = admin
+version = 6.5.3
+modtime = 1506582663.948453400
+
+[props/users_addresses/EVAL-Address]
+access = read : [ * ], write : [ * ]
+export = none
+owner = admin
+version = 6.5.3
+modtime = 1506585035.515282500
+
+[props/users_addresses/EVAL-country]
+access = read : [ * ], write : [ * ]
+export = none
+owner = admin
+version = 6.5.3
+modtime = 1506584087.597036500
