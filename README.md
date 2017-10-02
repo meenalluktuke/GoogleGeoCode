@@ -34,10 +34,14 @@ Splunk 6.5, 6.6
 index=test sourcetype="users_addresses" | head 2| table first_name last_name address city country Address | printgeocode type=geocode address=Address
 ```
 
+ ![Geocoding](Geocoding1.PNG)
+
 - Use map with latitude,longitude from the output of the command
  ```sh
 index=test sourcetype="users_addresses" | head 2| table first_name last_name address city country Address | printgeocode type=geocode address=Address| geostats count latfield=geolocation_lat longfield=geolocation_lon 
 ```
+
+  ![Geocoding Map](Geocoding2.PNG)
 
 
 - Reverse Geocoding: latitude,longitude to Address
@@ -47,7 +51,11 @@ index=test sourcetype="user_latlon" | head 5| table policyID line county point_l
   Where type=reverse tells the app that this is Reverse Geocoding
   and point_latitude,point_longitude are the lat,lon fields in your data
   
- As simple as looking for a location on Maps, don't you think?
+  
+  ![Reverse Geocoding](ReverseGeocoding.PNG)
+
+
+As simple as looking for a location on Maps :)
 
 ### Troubleshooting
 
