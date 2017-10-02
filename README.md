@@ -22,6 +22,10 @@ Splunk 6.5, 6.6
   - Geocoding: Address to latitude,longitude
 ```sh
   <your splunk query>|printgeocode type=geocode address=Address
+```
+  OR 
+```sh  
+   <your splunk query>|printgeocode type=reverse latfield=<latfieldname> lonfield=<lonfieldname>
  ```
   Where type=geocoding tells the app that it is geocoding
   Address is the name of the text field in your data which contains a valid address. For example:
