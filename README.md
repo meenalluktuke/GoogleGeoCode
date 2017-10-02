@@ -2,37 +2,48 @@
 
 ## Overview
 
-Google GeoCode app is a way to translate your address fields into (latitude,longitude). If you do not have IP address in your data and still want to use the map with markers, this app will help you.
+Google GeoCode app is a way to translate your address fields into (latitude,longitude) and also reverse i.e. (latitude,longitude) into Address. Just use the command "printgeocode" in pipeline to your Splunk search command and convert your address to geolocation points or vice versa.
 
-Version: 1.2
+Version: 1.4
 
 # Infrastructure Requiment
 
 Any Operating system (tested on Windows 10 and Linux)
-Splunk 6.5
+Splunk 6.5, 6.6
 
 # Installation
 
-  - Install the app on your search head
+  - Install the app on your Splunk Search Head(s).
   - Get a google API key from [Google API Key](https://developers.google.com/maps/documentation/javascript/get-api-key)
   - Write the API_Key in the setup page
-  - Pass your address field to command and see the magic!
+  - Restart Splunk Search Head.
 
 # Usage
+  - Geocoding: Address to latitude,longitude
 ```sh
-  <your splunk query>|printgeocode address
+  <your splunk query>|printgeocode type=geocode address=Address
  ```
-  Where address is the name of the text field in your data which contains a valid address. For example:
+  Where type=geocoding tells the app that it is geocoding
+  Address is the name of the text field in your data which contains a valid address. For example:
 
  ```sh
-index=_internal | stats count by source |eval Address="San Jose, California, United States" | printgeocode Address
+index=test sourcetype="users_addresses" | head 2| table first_name last_name address city country Address | printgeocode type=geocode address=Address
 ```
 
- As simple as looking for a location on Maps, don't you think?
+- Use map with latitude,longitude from the output of the command
+ ```sh
+index=test sourcetype="users_addresses" | head 2| table first_name last_name address city country Address | printgeocode type=geocode address=Address| geostats count latfield=geolocation_lat longfield=geolocation_lon 
+```
 
-You can also:
-  - Add simple rex and eval to extract lat and long values and then plot a map
-  - Use other apps which plot multiple markers
+
+- Reverse Geocoding: latitude,longitude to Address
+ ```sh
+index=test sourcetype="user_latlon" | head 5| table policyID line county point_latitude point_longitude | printgeocode type=reverse latfield=point_latitude lonfield=point_longitude 
+```
+  Where type=reverse tells the app that this is Reverse Geocoding
+  and point_latitude,point_longitude are the lat,lon fields in your data
+  
+ As simple as looking for a location on Maps, don't you think?
 
 ### Troubleshooting
 
