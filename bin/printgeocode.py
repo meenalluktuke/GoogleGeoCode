@@ -1,5 +1,5 @@
 import splunk.Intersplunk
-from geopy import geocoders
+import requests
 
 def geocode(string):
 
@@ -12,16 +12,24 @@ def geocode(string):
 		l = line.strip().split('=')
 		api_key_val=l[1]
 			
-	g = geocoders.GoogleV3(api_key=api_key_val)
-	place, (lat,lng) = g.geocode(address)
-
-	# Returns latitude,longitude pair
-	return lat,lng
+	lat=None
+	lon=None
+	url='https://maps.googleapis.com/maps/api/geocode/json'
+	params={'sensor':'false','address':address,'key':api_key_val}
+	r=requests.get(url,params=params)
+	status=r.json()['status']
+	if status == 'OK':
+		d=dict(r.json())
+		loc=d['results'][0]['geometry']['location']
+		lat,lon=loc['lat'],loc['lng']
+	else:
+		lat=None
+		lon=None
+	return status,lat,lon
 	
 
-def reverse_geocode(location):
-	Point=location
-
+def reverse_geocode(lat,lon):
+	
 	fname = open('../local/appsetup.conf', 'r')
 	for line in fname.readlines():
 		if '=' not in line:
@@ -29,13 +37,23 @@ def reverse_geocode(location):
 		l = line.strip().split('=')
 		api_key_val=l[1]
 
-	
 	# Reverse Geocoding
-	g = geocoders.GoogleV3(api_key=api_key_val)
-	place = g.reverse(Point,exactly_one=True)
-  
-        # Returns Address field
-	return place.address
+	base='https://maps.googleapis.com/maps/api/geocode/json?'
+	params="latlng={lat},{lon}&sensor={sen}&key={key}".format(
+		lat=lat,
+		lon=lon,
+		sen='false',
+		key=api_key_val
+	)
+	url="{base}{params}".format(base=base,params=params)
+	r=requests.get(url)
+	status=r.json()['status']
+	if status == 'OK':
+		d=dict(r.json())
+		address=d['results'][0]['formatted_address']
+	else:
+		address=None
+	return status,address
  
  # A basic shell for any custom streaming command. Just pass the events to it
 def customcommand(results, settings):
@@ -65,17 +83,29 @@ def customcommand(results, settings):
 			if Type == "geocode":
 				newfield1 = "geolocation_lat"
 				newfield2 = "geolocation_lon"
-
+				status_field = "geolocation_status"
 				address_value = result[address]
-				lat,lng = geocode(address_value)
-				result[newfield1]=lat
-				result[newfield2]=lng
+				status,lat,lng = geocode(address_value)
+				if status == 'OK':
+					result[status_field]=status
+					result[newfield1]=lat
+					result[newfield2]=lng
+				else:
+					result[status_field]=status
+					result[newfield1]="NA"
+					result[newfield2]="NA"
 			if Type == "reverse":
 				newfield = "geolocation_addr"
 				lat_value = result[lat]
 				lon_value = result[lon]
-				loc=lat_value,lon_value
-				result[newfield] = reverse_geocode(loc)
+				status_field = "geolocation_status"
+				status,address=reverse_geocode(lat_value,lon_value)
+				if status == 'OK':
+					result[newfield] = address
+					result[status_field]=status
+				else:
+					result[newfield] = None
+					result[status_field]=status
      # Let the modified events flow back into the search results
 		splunk.Intersplunk.outputResults(results)
  
@@ -87,5 +117,3 @@ def customcommand(results, settings):
 results, dummyresults, settings = splunk.Intersplunk.getOrganizedResults()
  # Send the events to be worked on
 results = customcommand(results, settings)
-
-
