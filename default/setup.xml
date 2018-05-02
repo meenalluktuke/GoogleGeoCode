@@ -1,6 +1,10 @@
 <setup>
-<block title="Enter your Google API Key" endpoint="apiconf/GoogleAPIkey" entity="app_config">
-    <input field="api_key">
+<block title="Enter your Google API Key" endpoint="storage/passwords" entity="_new">
+	<input field="name">
+        <label>API Label</label>
+        <type>text</type>
+    </input>
+    <input field="password">
         <label>Enter API Key</label>
         <type>text</type>
     </input>
