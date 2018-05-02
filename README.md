@@ -4,7 +4,7 @@
 
 Google GeoCode app is a way to translate your address fields into (latitude,longitude) and also reverse i.e. (latitude,longitude) into Address. Just use the command "printgeocode" in pipeline to your Splunk search command and convert your address to geolocation points or vice versa.
 
-Version: 1.6
+Version: 1.7.0
 
 # Infrastructure Requiment
 
@@ -61,6 +61,20 @@ index=test sourcetype="user_latlon" | head 5| table policyID line county point_l
 
 As simple as looking for a location on Maps :)
 
+### Handling of API key
+
+The Google API Key entered on the setup page is stored as password in encrypted format at Rest Endpoint path: 
+** https://<SPLUNK_SEARCH_HEAD_URL>:8089/servicesNS/nobody/GoogleGeoCode/storage/passwords **
+    
+![Setup](Setup.PNG)
+    
+The password is retrieved, decrypted and then the API is invoked. It is stored at $SPLUNK_HOME/etc/apps/GoogleGeoCode/local/passwords.conf
+    
+```sh
+    [credential::Test Server Key:]
+    password = $1$DLLZaK+SYHMnEAonrZi7vpuOEpJUXvi3cX3mV1fonSgdiiz3ZR2BHg==
+```
+
 ### Troubleshooting
 
 - The field geolocation_status is an indicator of the status from Google's Geolocation API. If everything is okay (input, quota of API key and Internet connection), the status will be "OK". Below are some of the status returned by Google's API-
@@ -77,10 +91,13 @@ As simple as looking for a location on Maps :)
   - Option1: Get a new Key and put that value in myconfig.py. Restart Splunk search head, the results should be good.
   - Option 2: Wait for midnight PST timezone for the limit to rest :)
 
-
-More information and code is avaialble here:
-
-[Gitgub Link](https://github.com/meenalluktuke/GoogleGeoCode/blob/master/README.md)
+- When you run the command, the information is logged into $SPLUNK_HOME/var/log/googlegeocode.log
+```sh
+    2018-05-02 14:10:35,167 INFO In Reverse Geocode function
+    2018-05-02 14:10:37,578 INFO Status from Google GeoCoding API is OK
+    2018-05-02 14:21:28,525 INFO In Reverse Geocode function
+    2018-05-02 14:21:30,733 INFO Status from Google GeoCoding API is OK
+```
 
 # References
 The app uses the Google's Geocoding API. Here's the link to their [documentation](https://developers.google.com/maps/documentation/geocoding/intro)
