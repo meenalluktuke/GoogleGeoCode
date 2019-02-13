@@ -47,7 +47,7 @@ def geocode(string):
       lat,lon=loc['lat'],loc['lng']
       logger.info("Successful conversion of address->lat,lon. Returned: (%f,%f)",lat,lon)
    else:
-      logger.info("Something is not write, please see status: %s",status)
+      logger.info("Something is not right, please see status: %s",status)
       logger.info("Returning lat,lon as blank")
       lat=None
       lon=None
@@ -75,7 +75,7 @@ def reverse_geocode(lat,lon):
       address=d['results'][0]['formatted_address']
       logger.info("Successful conversion of (lat,lon)-> Address. Returned: (%s)",address)
    else:
-      logger.info("Something is not write, please see status: %s",status)
+      logger.info("Something is not right, please see status: %s",status)
       logger.info("Returning address as blank")
       address=None
    return status,address  
